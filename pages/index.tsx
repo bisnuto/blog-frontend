@@ -1,10 +1,24 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import * as React from "react";
 import Image from "next/image";
 import { Button } from "@/components/elements/Button";
 import styles from "@/styles/pages/Home.module.css";
 
+const Monkeys = () => {
+  const [num, setNum] = React.useState(0)
+  console.log("Monkeys render");
+  return(
+    <div>
+      <p>There are {num} monkeys.</p>
+      <button onClick={() => setNum(num + 1)}>Add one monkey</button>
+      <button onClick={() => setNum(num - 1)}>Subtract one monkey</button>
+    </div>
+  )
+}
+
 const Home: NextPage = () => {
+  console.log("Home render");
     return (
         <div className={styles.Container}>
             <Head>
@@ -21,6 +35,7 @@ const Home: NextPage = () => {
                     Welcome to Fernandos Blog Project
                 </h1>
                 <Button />
+                <Monkeys />
             </main>
         </div>
     );
