@@ -5,19 +5,28 @@ import Image from "next/image";
 import { Button } from "@/components/elements/Button";
 import styles from "@/styles/pages/Home.module.css";
 
-const Monkeys = () => {
-  const [num, setNum] = React.useState(0)
-  console.log("Monkeys render");
+type TAnimals = {
+  num : number;
+  animal : string;
+}
+
+const Animal = ({num,animal}:TAnimals): JSX.Element => {
+  console.log(`${animal} rendered`);
   return(
     <div>
-      <p>There are {num} monkeys.</p>
-      <button onClick={() => setNum(num + 1)}>Add one monkey</button>
-      <button onClick={() => setNum(num - 1)}>Subtract one monkey</button>
+      <p>There are {num} {animal}s.</p>
     </div>
   )
 }
 
 const Home: NextPage = () => {
+  const [num,setNum] = React.useState(0)
+  const addAnimal = () => {
+    setNum(num + 1)
+  }
+  const minusAnimal = () => {
+
+  }
   console.log("Home render");
     return (
         <div className={styles.Container}>
@@ -34,8 +43,29 @@ const Home: NextPage = () => {
                 <h1 className={styles.Title}>
                     Welcome to Fernandos Blog Project
                 </h1>
+                <div className={styles.Banner}>
+                  <Image
+                  src="/images/banner.jpg"
+                  className={styles.BannerImage}
+                  layout="fill"
+                  objectFit="cover"
+                  alt="Autumn Sale Banner"
+                  objectPosition="center"
+                  />
+                </div>
+
                 <Button />
-                <Monkeys />
+                <Animal
+                  num={num}
+                  animal="Jaguar"
+                />
+                <Animal
+                  num={num}
+                  animal="Monkey"
+                />
+
+                <button onClick={addAnimal}>Add one animal</button>
+                <button onClick={() => setNum(num - 1)}>Subtract one animal</button>
             </main>
         </div>
     );
