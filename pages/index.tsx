@@ -4,29 +4,12 @@ import * as React from "react";
 import Image from "next/image";
 import { Button } from "@/components/elements/Button";
 import styles from "@/styles/pages/Home.module.css";
+import { Animal } from "@/components/elements/Animal";
 
-type TAnimals = {
-  num : number;
-  animal : string;
-}
 
-const Animal = ({num,animal}:TAnimals): JSX.Element => {
-  console.log(`${animal} rendered`);
-  return(
-    <div>
-      <p>There are {num} {animal}s.</p>
-    </div>
-  )
-}
 
 const Home: NextPage = () => {
-  const [num,setNum] = React.useState(0)
-  const addAnimal = () => {
-    setNum(num + 1)
-  }
-  const minusAnimal = () => {
 
-  }
   console.log("Home render");
     return (
         <div className={styles.Container}>
@@ -56,16 +39,13 @@ const Home: NextPage = () => {
 
                 <Button />
                 <Animal
-                  num={num}
                   animal="Jaguar"
                 />
                 <Animal
-                  num={num}
                   animal="Monkey"
                 />
 
-                <button onClick={addAnimal}>Add one animal</button>
-                <button onClick={() => setNum(num - 1)}>Subtract one animal</button>
+
             </main>
         </div>
     );
