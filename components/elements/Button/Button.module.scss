@@ -1,8 +1,10 @@
+@import "@/styles/utils";
+
 .Button{
   border-radius: 10px;
   border: 2px solid red;
   background-color: white;
-  color: red;
+  color: $test;
   text-align: center;
   height: 20px;
 }

@@ -3,7 +3,7 @@ import Head from "next/head";
 import * as React from "react";
 import Image from "next/image";
 import { Button } from "@/components/elements/Button";
-import styles from "@/styles/pages/Home.module.css";
+import styles from "@/styles/pages/Home.module.scss";
 import { Animal } from "@/components/modules/Animal";
 
 

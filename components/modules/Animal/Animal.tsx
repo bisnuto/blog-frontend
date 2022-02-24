@@ -1,4 +1,4 @@
-import styles from "./Animal.module.css";
+import styles from "./Animal.module.scss";
 import * as React from "react";
 
 type TAnimals = {
