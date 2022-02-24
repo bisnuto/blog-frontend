@@ -1,5 +1,6 @@
 import styles from "./Animal.module.scss";
 import * as React from "react";
+import {Button} from "@/components/elements/Button";
 
 type TAnimals = {
   animal : string;
@@ -22,8 +23,8 @@ const Animal = ({animal}:TAnimals): JSX.Element => {
         <p>There are {num} {animal}s.</p>
       </div>
       <div className={styles.ButtonsBox}>
-        <button className={styles.ButtonAnimals} onClick={addAnimal}>Add one {animal}</button>
-        <button className={styles.ButtonAnimals} onClick={minusAnimal}>Subtract one {animal}</button>
+        <Button handleClick={addAnimal}>Add one {animal}</Button>
+        <Button handleClick={minusAnimal}>Subtract one {animal}</Button>
       </div>
     </div>
 

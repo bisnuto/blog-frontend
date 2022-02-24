@@ -37,7 +37,6 @@ const Home: NextPage = () => {
                   />
                 </div>
 
-                <Button />
                 <Animal
                   animal="Jaguar"
                 />

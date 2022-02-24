@@ -1,6 +1,11 @@
 import styles from "./Button.module.scss";
+import * as React from "react";
 
-const Button = (): JSX.Element => {
-    return <button className={styles.Button}>Hi, I am a useless button</button>;
+type TButtonProps = {
+    handleClick: () => void;
+    children?:React.ReactNode; 
+}
+const Button = ({handleClick, children}:TButtonProps): JSX.Element => {
+    return <button className={styles.Button} onClick={handleClick}>{children}</button>;
 };
 export { Button };
