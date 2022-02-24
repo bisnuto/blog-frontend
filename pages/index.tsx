@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import { Button } from "@/components/elements/Button";
 import styles from "@/styles/pages/Home.module.css";
-import { Animal } from "@/components/elements/Animal";
+import { Animal } from "@/components/modules/Animal";
 
 
 
