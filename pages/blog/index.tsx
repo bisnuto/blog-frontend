@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "@/styles/pages/Blog.module.scss";
 
-const Home: NextPage = () => {
+const Blog: NextPage = () => {
     return (
         <div className={styles.container}>
             <Head>
@@ -20,4 +20,4 @@ const Home: NextPage = () => {
     );
 };
 
-export default Home;
+export default Blog;

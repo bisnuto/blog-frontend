@@ -1,0 +1,9 @@
+@import "@/styles/utils";
+
+.ProductList{
+   display: flex; 
+   gap: 20px;
+}
+.Product{
+    list-style: none;
+}
