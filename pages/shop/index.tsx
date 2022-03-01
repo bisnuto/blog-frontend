@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -9,7 +10,10 @@ type TProduct = {
     image: string;
 };
 type TKart = TProduct[];
-
+type TData = {
+    message: string[];
+    status: "success" | "pending" | "error";
+}
 const Shop: NextPage = () => {
     const kart: TKart = [
         {
@@ -33,6 +37,32 @@ const Shop: NextPage = () => {
             image: "/images/shop/3.jpg"
         }
     ]
+    //use effect and state for api call
+    const [data,setData] = React.useState<TData>(
+        {
+            message: [],
+            status: "pending"
+        }
+    )
+
+    const apiUrl = "https://dog.ceo/api/breeds/image/drandom/4";
+    React.useEffect(() => {
+        async function fetchDogsJSON() {
+            try {
+                const response = await fetch(apiUrl);
+                const dogs = await response.json();
+                if(dogs.status === "error"){
+                    throw new Error("sorry something happened");
+                }
+                setData(dogs); 
+            } catch (error) {
+                console.error(error);
+            }
+ 
+          }
+          fetchDogsJSON();
+    },[])
+    console.log(data);
     return (
         <div>
             <Head>
@@ -43,11 +73,11 @@ const Shop: NextPage = () => {
             <main>
                 <section className="container">
                     <ul className={styles.ProductList}>
-                    {kart.map((product:TProduct,index:number) => {
+                    {data.status === "success" && data.message.map((url:string) => {
+                        console.log("render");
                        return (
-                           <li className={styles.Product} key={product.id}>
-                               <h3>{ product.name } { index }</h3>
-                               <Image src={product.image} width="300" height="200"/>
+                           <li className={styles.Product} key={url.slice(-8)}>
+                               <Image src={url} width="300" height="200"/>
                            </li>
                        )
                    })}
