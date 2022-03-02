@@ -45,7 +45,7 @@ const Shop: NextPage = () => {
         }
     )
 
-    const apiUrl = "https://dog.ceo/api/breeds/image/drandom/4";
+    const apiUrl = "https://dog.ceo/api/breeds/image/random/4";
     React.useEffect(() => {
         async function fetchDogsJSON() {
             try {
