@@ -3,6 +3,10 @@
 .ProductList{
    display: flex; 
    gap: 20px;
+   flex-wrap: wrap;
+   li{
+       width: calc(20%);
+   }
 }
 .Product{
     list-style: none;

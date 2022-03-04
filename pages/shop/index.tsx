@@ -2,6 +2,7 @@ import * as React from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { Button } from "@/components/elements/Button";
 import styles from "@/styles/pages/Shop.module.scss";
 
 type TProduct = {
@@ -62,7 +63,30 @@ const Shop: NextPage = () => {
           }
           fetchDogsJSON();
     },[])
-    console.log(data);
+
+    async function fetchDogs() {
+        
+
+      }
+
+    const addDogs = async () => {
+
+        try {
+            const response = await fetch(apiUrl);
+            const dogs = await response.json();
+            if(dogs.status === "error"){
+                throw new Error("sorry something happened");
+            }
+            const dataCopy = JSON.parse(JSON.stringify(data));
+            
+            const updated = dataCopy.message.concat(dogs.message);
+            dataCopy.message = updated;
+
+            setData(dataCopy);
+        } catch (error) {
+            console.error(error);
+        }
+    }
     return (
         <div>
             <Head>
@@ -74,7 +98,6 @@ const Shop: NextPage = () => {
                 <section className="container">
                     <ul className={styles.ProductList}>
                     {data.status === "success" && data.message.map((url:string) => {
-                        console.log("render");
                        return (
                            <li className={styles.Product} key={url.slice(-8)}>
                                <Image src={url} width="300" height="200"/>
@@ -82,6 +105,8 @@ const Shop: NextPage = () => {
                        )
                    })}
                     </ul>
+
+                    <Button handleClick={addDogs}>Add more Dogs</Button>
                    
                 </section>
             </main>
