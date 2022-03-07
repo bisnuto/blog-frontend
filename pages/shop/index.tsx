@@ -87,6 +87,20 @@ const Shop: NextPage = () => {
             console.error(error);
         }
     }
+    const subDogs = () => {
+        //Make copy of data
+        const dataCopy = JSON.parse(JSON.stringify(data));
+
+        //Remove 4 dogs from end of array
+        const newMessage = dataCopy.message.slice(0,dataCopy.message.length - 4);
+        //Replace message with the sliced array
+        dataCopy.message = newMessage;
+        //Update the state of data
+        setData(dataCopy);
+
+
+        
+    }
     return (
         <div>
             <Head>
@@ -107,6 +121,7 @@ const Shop: NextPage = () => {
                     </ul>
 
                     <Button handleClick={addDogs}>Add more Dogs</Button>
+                    <Button handleClick={subDogs}>Subtract 4 Dogs</Button>
                    
                 </section>
             </main>
