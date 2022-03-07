@@ -18,7 +18,7 @@ const Animal = ({animal}:TAnimals): JSX.Element => {
     }
   }
   return(
-    <div>
+    <>
       <div>
         <p>There are {num} {animal}s.</p>
       </div>
@@ -26,7 +26,7 @@ const Animal = ({animal}:TAnimals): JSX.Element => {
         <Button handleClick={addAnimal}>Add one {animal}</Button>
         <Button handleClick={minusAnimal}>Subtract one {animal}</Button>
       </div>
-    </div>
+    </>
 
   )
 }
