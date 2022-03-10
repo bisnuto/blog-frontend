@@ -1,7 +1,10 @@
+import { Navbar } from "@/components/modules/Navbar";
+
+
 function BasicLayout({ children }) {
   return (
     <>
-      <div>navbar</div>
+      <Navbar></Navbar>
       <main>{children}</main>
       <div>footer</div>
 

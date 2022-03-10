@@ -1,0 +1,26 @@
+@import "@/styles/utils";
+
+.Navbar{
+    background-color: #EAF9FF;
+    width: 100%;
+    ul{
+        list-style-type: none;
+        display: flex;
+        li{
+            a{
+                background-color: gray;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 16px;
+                height: 50px;
+                width: 100px;
+                transition: .3s;
+                &:hover{
+                    opacity: .5;
+                }
+            }
+        }
+    }
+}
