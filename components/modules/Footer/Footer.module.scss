@@ -1,0 +1,22 @@
+@import "@/styles/utils";
+
+.Footer{
+    background-color: rgb(236, 220, 220);
+    padding: 100px 50px;
+    width: 100%;
+    text-align: center;
+    ul{
+        margin: 0 auto;
+        padding: 0 0 70px;
+        display: flex;
+        list-style-type: none;
+        justify-content: center;
+        width: 100%;
+        li{
+            a{
+                font-size: 12px;
+                padding: 0 10px;
+            }
+        }
+    }
+}
