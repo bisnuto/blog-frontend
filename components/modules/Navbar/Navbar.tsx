@@ -1,4 +1,5 @@
 import * as React from "react";
+import Link from 'next/link'
 import styles from "./Navbar.module.scss";
 
 
@@ -7,9 +8,9 @@ function Navbar() {
       
         <div className={styles.Navbar}>
             <ul>
-                <li><a href="/">Top</a></li>
-                <li><a href="/blog/">Blog</a></li>
-                <li><a href="/shop/">Shop</a></li>
+                <li><Link href="/"><a>Top</a></Link></li>
+                <li><Link href="/blog/"><a>Blog</a></Link></li>
+                <li><Link href="/shop/"><a>Shop</a></Link></li>
             </ul>
         </div>
   

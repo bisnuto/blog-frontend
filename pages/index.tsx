@@ -1,16 +1,52 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Link from 'next/link'
 import * as React from "react";
 import Image from "next/image";
 import { Button } from "@/components/elements/Button";
 import styles from "@/styles/pages/Home.module.scss";
 import { Animal } from "@/components/modules/Animal";
 
-
+type TPost = {
+  id: number;
+  meta: {
+      type: string;
+      detail_url: string;
+      html_url: string;
+      slug: string;
+      first_published_at: string;
+  },
+  title: string;
+}
+type TPostData = {
+  meta: {
+      total_count: number;
+  },
+  items: TPost[];
+}
+type TData = TPostData | null;
 
 const Home: NextPage = () => {
 
-  console.log("Home render");
+  const [data,setData] = React.useState<TData>(null)
+console.log(data);
+const apiUrl = "http://127.0.0.1:8000/api/v2/cms/pages/?type=blog.BlogPage";
+React.useEffect(() => {
+    async function fetchPostsJSON() {
+        try {
+            const response = await fetch(apiUrl);
+            const posts : TPostData = await response.json();
+            
+            setData(posts);
+        } catch (error) {
+            console.error(error);
+            console.log("here");
+        }
+
+      }
+      fetchPostsJSON();
+},[])
+
     return (
         <div className={styles.Container}>
             <Head>
@@ -43,6 +79,23 @@ const Home: NextPage = () => {
                 <Animal
                   animal="Monkey"
                 />
+                <section className={styles.Blog}>
+                  <h2>Blog</h2>
+                  <ul>
+                  {data && data.items.map((post:TPost) => {
+                       return (
+                           <li className={styles.Product} key={post.id}>
+                             <Link href={`/blog/${post.id}`}>
+                               <a>
+                                <p>{post.title}</p>
+                               </a>
+                              </Link>
+                             
+                           </li>
+                       )
+                   })}
+                   </ul>
+                </section>
 
 
             </main>
