@@ -85,7 +85,7 @@ React.useEffect(() => {
                   {data && data.items.map((post:TPost) => {
                        return (
                            <li className={styles.Product} key={post.id}>
-                             <Link href={`/blog/${post.id}`}>
+                             <Link href={`/blog/${post.meta.slug}`}>
                                <a>
                                 <p>{post.title}</p>
                                </a>

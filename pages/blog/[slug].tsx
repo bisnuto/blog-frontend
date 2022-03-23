@@ -5,8 +5,10 @@ import Head from "next/head";
 import Image from "next/image";
 // Project imports
 import styles from "@/styles/pages/BlogDetail.module.scss";
+import { type } from "os";
 
 // Types
+
 type TBlogDetail = {
     id: number;
     meta: {
@@ -14,20 +16,7 @@ type TBlogDetail = {
         detail_url: string;
         html_url: string;
         slug: string;
-        show_in_menus: boolean;
-        seo_title: string;
-        search_description: string;
         first_published_at: string;
-        alias_of: string | null;
-        parent: {
-            id: number;
-            meta: {
-                type: string;
-                detail_url: string;
-                html_url: string;
-            };
-            title: string;
-        };
     };
     title: string;
     published_date: string;
@@ -43,6 +32,15 @@ type TBlogDetail = {
     };
 };
 
+type TResponse = {
+    meta: {
+        total_count: number
+    };
+    items: TBlogDetail[];
+}
+const NotFound = () => {
+    return <h2>404 Page not found</h2>
+}
 // Page component
 const BlogDetail: NextPage = () => {
     const router = useRouter();
@@ -53,17 +51,19 @@ const BlogDetail: NextPage = () => {
         async function fetchPostJSON(url: string) {
             try {
                 const response = await fetch(url);
-                const post: TBlogDetail = await response.json();
-
-                setPostData(post);
+                const post: TResponse = await response.json();
+                if(post.items.length){
+                    setPostData(post.items[0]);
+                }
+                
             } catch (error) {
                 console.error(error);
                 console.log("here");
             }
         }
         if (router.isReady) {
-            const { id } = router.query;
-            blogUrl = `http://127.0.0.1:8000/api/v2/cms/pages/${id}`;
+            const { slug } = router.query;
+            blogUrl = `http://127.0.0.1:8000/api/v2/cms/pages/?slug=${slug}&type=blog.BlogPage&fields=body,published_date,feed_image`;
             fetchPostJSON(blogUrl);
         }
     }, [router]);
@@ -110,7 +110,7 @@ const BlogDetail: NextPage = () => {
                                 />
                             </div>
                         </div>
-                    ) : null}
+                    ) : <NotFound/>}
                 </section>
             </>
         </div>
