@@ -12,3 +12,14 @@
   width: 100%;
 
 }
+.Main{
+  max-width: 1000px;
+  margin: 0 auto;
+  .Title{
+    color: rgb(49, 39, 39);
+    font-size: 49px;
+    letter-spacing: 0.05em;
+    line-height: 1.7;
+  }
+}
+

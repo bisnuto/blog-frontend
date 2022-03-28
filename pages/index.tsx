@@ -48,7 +48,7 @@ React.useEffect(() => {
 },[])
 
     return (
-        <div className={styles.Container}>
+        <>
             <Head>
                 <title>Fernando Blog</title>
                 <meta
@@ -58,7 +58,7 @@ React.useEffect(() => {
                 <link rel="icon" href="/images/favicon.ico" />
             </Head>
 
-            <main className={styles.Main}>
+            <section className={styles.Main}>
                 <h1 className={styles.Title}>
                     Welcome to Fernandos Blog Project
                 </h1>
@@ -98,8 +98,8 @@ React.useEffect(() => {
                 </section>
 
 
-            </main>
-        </div>
+            </section>
+        </>
     );
 };
 
