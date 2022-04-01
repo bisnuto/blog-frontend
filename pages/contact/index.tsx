@@ -4,13 +4,26 @@ import Image from "next/image";
 import styles from "@/styles/pages/Contact.module.scss";
 import * as React from "react";
 
+type TContactResponse = {
+    data: {
+        name: string;
+        email: string;
+        message: string;
+    } | null;
+    errors: {
+        name?: string[];
+        email?: string[];
+        message?: string[];
+    } | null
+
+}
 const Contact: NextPage = () => {
     const [name,setName] = React.useState("")
     const [email,setEmail] = React.useState("")
     const [message,setMessage] = React.useState("")
     const [status,setStatus] = React.useState({
         state: "idle",
-        errors: [],
+        errors: null,
     })
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         
@@ -34,14 +47,26 @@ const Contact: NextPage = () => {
               if(!response.ok){
                   throw new Error("Sorry error..")
               }
-              const responseJson = await response.json(); // parses JSON response into native JavaScript objects
-              setMessage(""); 
-              setEmail("");
-              setName("");
-              setStatus({...status,state:"success"})
-              setTimeout(()=>{
+              const responseJson:TContactResponse = await response.json(); // parses JSON response into native JavaScript objects
+              console.log(responseJson)
+              if(responseJson.errors){
+                const statusCopy = JSON.parse(JSON.stringify(status))
+                statusCopy.errors = responseJson.errors
+                setStatus(statusCopy)
                 setStatus({...status,state:"idle"})
-              },2000)
+                console.log("here")
+
+              }else{
+                setMessage(""); 
+                setEmail("");
+                setName("");
+                setStatus({...status,state:"success"})
+                setTimeout(()=>{
+                  setStatus({...status,state:"idle"})
+                },2000)
+              }
+                                setStatus({...status,state:"idle"})
+
             } catch (error) {
                 setStatus({...status,state:"error"})
             console.error(error);
@@ -60,6 +85,11 @@ const Contact: NextPage = () => {
                 <div>
                     <label htmlFor="email">E-mail address</label>
                     <input type="email" name="email" value={email} onChange={(e)=>setEmail(e.target.value)}/>
+                    <ul>{status?.errors?.email ? status.errors.email.map((error:string) => {
+                        return <li key={error}>{error}</li>
+                    }
+                    ):null}</ul>
+                    
                 </div>
                 <div>
                     <label htmlFor="message">message</label>
