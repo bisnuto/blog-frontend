@@ -65,14 +65,12 @@ const Contact: NextPage = () => {
                 throw new Error("Sorry error..");
             }
             const responseJson: TContactResponse = await response.json(); // parses JSON response into native JavaScript objects
-            console.log(responseJson);
             if (responseJson.errors) {
                 // Deal with field errors here
                 const statusCopy = JSON.parse(JSON.stringify(status));
                 statusCopy.errors = responseJson.errors;
                 statusCopy.state = "idle";
                 setStatus(statusCopy);
-                console.log("here");
             } else {
                 // Deal with successful submission here
                 setMessage("");
@@ -103,7 +101,21 @@ const Contact: NextPage = () => {
                         name="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        onFocus={(e) => {
+                            const statusCopy = JSON.parse(JSON.stringify(status));
+                            if(statusCopy && statusCopy.errors.hasOwnProperty(e.target.name)){
+                                delete statusCopy.errors[e.target.name]
+                                setStatus(statusCopy)
+                            }
+                        }}
                     />
+                    {status?.errors?.name ? (
+                        <ul>
+                            {status.errors.name.map((error: string) => {
+                                return <li key={error}>{error}</li>;
+                            })}
+                        </ul>
+                    ) : null}
                 </div>
                 <div>
                     <label htmlFor="email">E-mail address</label>
@@ -112,6 +124,13 @@ const Contact: NextPage = () => {
                         name="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        onFocus={(e) => {
+                            const statusCopy = JSON.parse(JSON.stringify(status));
+                            if(statusCopy && statusCopy.errors.hasOwnProperty(e.target.name)){
+                                delete statusCopy.errors[e.target.name]
+                                setStatus(statusCopy)
+                            }
+                        }}
                     />
                     {status?.errors?.email ? (
                         <ul>
@@ -128,7 +147,21 @@ const Contact: NextPage = () => {
                         name="message"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
+                        onFocus={(e) => {
+                            const statusCopy = JSON.parse(JSON.stringify(status));
+                            if(statusCopy && statusCopy.errors.hasOwnProperty(e.target.name)){
+                                delete statusCopy.errors[e.target.name]
+                                setStatus(statusCopy)
+                            }
+                        }}
                     />
+                    {status?.errors?.message ? (
+                        <ul>
+                            {status.errors.message.map((error: string) => {
+                                return <li key={error}>{error}</li>;
+                            })}
+                        </ul>
+                    ) : null}
                 </div>
                 <button type="submit">Send</button>
             </form>
