@@ -10,7 +10,10 @@ import { json } from "stream/consumers";
 /*
  * Types
  */
-
+type TFruit = {
+    id: number;
+    name: string;
+};
 type TInitData = {
     name: string;
     time_of_day: number;
@@ -18,6 +21,7 @@ type TInitData = {
     email: string;
     message: string;
     time_of_day_choices: string; //string rep of object so must use JSON.parse to convert to object
+    fruits: TFruit[];
 } | null;
 
 type TContactErrors = {
@@ -43,6 +47,7 @@ type TTurn = "morning" | "afternoon" | "evening";
 
 type TTime = "8:00" | "12:00" | "18:00";
 
+type TFruitsState = TFruit[];
 /*
  * Contact Page component
  */
@@ -57,6 +62,7 @@ const Contact: NextPage = () => {
         "10:00": false,
         "18:00": false,
     });
+    const [fruits, setFruits] = React.useState<TFruitsState>([]);
     const [message, setMessage] = React.useState("");
     const [status, setStatus] = React.useState<TStatus>({
         state: "idle",
@@ -91,6 +97,7 @@ const Contact: NextPage = () => {
             email: email,
             message: message,
             time_of_day: Number(timeOfDay),
+            fruits: fruits,
         };
         // start api calls here
         const url = "http://127.0.0.1:8000/api/v2/contact/";
@@ -135,6 +142,21 @@ const Contact: NextPage = () => {
         const timeCopy = JSON.parse(JSON.stringify(time));
         timeCopy[e.target.value] = !timeCopy[e.target.value];
         setTime(timeCopy);
+    }
+
+    function handleFruitChange(fruitId: number, fruitName: string) {
+        let fruitCopy = JSON.parse(JSON.stringify(fruits));
+        if (
+            fruitCopy.filter((fruitObj) => fruitObj.id === fruitId).length === 0
+        ) {
+            //add to array
+            const fruit = { id: fruitId, name: fruitName };
+            fruitCopy.push(fruit);
+        } else {
+            // remove item from array
+            fruitCopy = fruitCopy.filter((fruitObj) => fruitObj.id !== fruitId);
+        }
+        setFruits(fruitCopy);
     }
 
     //Create and set the value of the form variable here bases on status.state
@@ -225,6 +247,30 @@ const Contact: NextPage = () => {
                                 </label>
                             );
                         })}
+                    </fieldset>
+                </div>
+                <div>
+                    <fieldset>
+                        <legend>Which types of fruit do you like?</legend>
+                        {initFormData.fruits.map(
+                            (fruit: { id: number; name: string }) => {
+                                return (
+                                    <label key={fruit.id}>
+                                        <input
+                                            id={fruit.name}
+                                            type="checkbox"
+                                            onChange={() => {
+                                                handleFruitChange(
+                                                    fruit.id,
+                                                    fruit.name
+                                                );
+                                            }}
+                                        />
+                                        {fruit.name}
+                                    </label>
+                                );
+                            }
+                        )}
                     </fieldset>
                 </div>
                 {/*
