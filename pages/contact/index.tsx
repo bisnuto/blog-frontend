@@ -10,6 +10,16 @@ import { json } from "stream/consumers";
 /*
  * Types
  */
+
+type TInitData = {
+    name: string;
+    time_of_day: number;
+    time_of_day_display: string;
+    email: string;
+    message: string;
+    time_of_day_choices: string; //string rep of object so must use JSON.parse to convert to object
+} | null;
+
 type TContactErrors = {
     name?: string[];
     email?: string[];
@@ -41,6 +51,7 @@ const Contact: NextPage = () => {
     const [name, setName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [turn, setTurn] = React.useState("morning");
+    const [timeOfDay, setTimeOfDay] = React.useState("1");
     const [time, setTime] = React.useState({
         "8:00": false,
         "10:00": false,
@@ -51,6 +62,26 @@ const Contact: NextPage = () => {
         state: "idle",
         errors: null,
     });
+    const [initFormData, setInitFormData] = React.useState<TInitData>(null);
+
+    //Get Intitial form data from backend
+    React.useEffect(() => {
+        async function getInitData() {
+            try {
+                const url = "http://127.0.0.1:8000/api/v2/contact/dummy-data/";
+                const resp = await fetch(url);
+                if (!resp.ok) {
+                    throw new Error("something went wrong!");
+                }
+                const respJson = await resp.json();
+                setInitFormData(respJson);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        getInitData();
+    }, []);
+
     // handle sumbit function
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -58,14 +89,12 @@ const Contact: NextPage = () => {
         const formData = {
             name: name,
             email: email,
-            turn: turn,
-            time: time,
             message: message,
+            time_of_day: Number(timeOfDay),
         };
         // start api calls here
         const url = "http://127.0.0.1:8000/api/v2/contact/";
         try {
-            console.log(formData);
             const response = await fetch(url, {
                 method: "POST", // *GET, POST, PUT, DELETE, etc.
                 headers: {
@@ -89,6 +118,7 @@ const Contact: NextPage = () => {
                 setMessage("");
                 setEmail("");
                 setName("");
+                setTimeOfDay("1");
                 setStatus({ errors: null, state: "success" });
                 setTimeout(() => {
                     setStatus({ errors: null, state: "idle" });
@@ -100,18 +130,17 @@ const Contact: NextPage = () => {
             console.error(error);
         }
     }; // end handleSubmit
-    
-    function handleTimeChange(e){
-        const timeCopy = JSON.parse(JSON.stringify(time))
-        timeCopy[e.target.value] = !timeCopy[e.target.value]
-        setTime(timeCopy)
+
+    function handleTimeChange(e) {
+        const timeCopy = JSON.parse(JSON.stringify(time));
+        timeCopy[e.target.value] = !timeCopy[e.target.value];
+        setTime(timeCopy);
     }
 
     //Create and set the value of the form variable here bases on status.state
     let form = null;
     if (status.state === "idle") {
-        console.log("status", status);
-        form = (
+        form = initFormData ? (
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="name">Name</label>
@@ -120,11 +149,17 @@ const Contact: NextPage = () => {
                         name="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        placeholder={initFormData.name}
                         onFocus={(e) => {
-                            const statusCopy = JSON.parse(JSON.stringify(status));
-                            if(statusCopy && statusCopy.errors?.hasOwnProperty(e.target.name)){
-                                delete statusCopy.errors[e.target.name]
-                                setStatus(statusCopy)
+                            const statusCopy = JSON.parse(
+                                JSON.stringify(status)
+                            );
+                            if (
+                                statusCopy &&
+                                statusCopy.errors?.hasOwnProperty(e.target.name)
+                            ) {
+                                delete statusCopy.errors[e.target.name];
+                                setStatus(statusCopy);
                             }
                         }}
                     />
@@ -136,24 +171,15 @@ const Contact: NextPage = () => {
                         </ul>
                     ) : null}
                 </div>
-                <div
-                    
-                     // onFocus={(e) => {
-                        //     const statusCopy = JSON.parse(JSON.stringify(status));
-                        //     if(statusCopy && statusCopy.errors.hasOwnProperty(e.target.name)){
-                        //         delete statusCopy.errors[e.target.name]
-                        //         setStatus(statusCopy)
-                        //     }
-                        // }}
-                >
-                    <label>Morning
+                <div>
+                    <label>
+                        Morning
                         <input
                             type="radio"
-                            name="turn"
-                            value = "morning"
-                            checked
+                            value="morning"
+                            checked={turn === "morning"}
                             onChange={(e) => {
-                                setTurn(e.target.value)
+                                setTurn(e.target.value);
                             }}
                         />
                     </label>
@@ -161,10 +187,10 @@ const Contact: NextPage = () => {
                         Afternoon
                         <input
                             type="radio"
-                            name="turn"
                             value="afternoon"
+                            checked={turn === "afternoon"}
                             onChange={(e) => {
-                                setTurn(e.target.value)
+                                setTurn(e.target.value);
                             }}
                         />
                     </label>
@@ -172,64 +198,90 @@ const Contact: NextPage = () => {
                         Evening
                         <input
                             type="radio"
-                            name="turn"
                             value="evening"
+                            checked={turn === "evening"}
                             onChange={(e) => {
-                                setTurn(e.target.value)
+                                setTurn(e.target.value);
                             }}
                         />
                     </label>
-                    
                 </div>
+                <div>
+                    <fieldset>
+                        <legend>Which time of day do you prefer?</legend>
+                        {Object.entries(
+                            JSON.parse(initFormData.time_of_day_choices)
+                        ).map((choice) => {
+                            return (
+                                <label key={choice[0]}>
+                                    <input
+                                        type="radio"
+                                        checked={timeOfDay === choice[0]}
+                                        onChange={(e) => {
+                                            setTimeOfDay(choice[0]);
+                                        }}
+                                    />
+                                    {choice[1]}
+                                </label>
+                            );
+                        })}
+                    </fieldset>
+                </div>
+                {/*
                 <div>
                     <fieldset>
                         <legend>What time do you wanna visit me?</legend>
                         <label>
                             8:00
-                            <input 
-                            type="checkbox" 
-                            name="time"
-                            id="8:00"
-                            value="8:00"
-                            onChange={handleTimeChange}
+                            <input
+                                type="checkbox"
+                                name="time"
+                                id="8:00"
+                                value="8:00"
+                                onChange={handleTimeChange}
                             />
                         </label>
                         <label>
                             12:00
-                            <input 
-                            type="checkbox" 
-                            name="time"
-                            id="10:00"
-                            value="10:00"
-                            onChange={handleTimeChange}
+                            <input
+                                type="checkbox"
+                                name="time"
+                                id="10:00"
+                                value="10:00"
+                                onChange={handleTimeChange}
                             />
                         </label>
                         <label>
                             18:00
-                            <input 
-                            type="checkbox" 
-                            name="time"
-                            id="18:00"
-                            value="18:00"
-                            onChange={handleTimeChange}
+                            <input
+                                type="checkbox"
+                                name="time"
+                                id="18:00"
+                                value="18:00"
+                                onChange={handleTimeChange}
                             />
                         </label>
                     </fieldset>
-                    
-                    
                 </div>
+                    */}
                 <div>
                     <label htmlFor="email">E-mail address</label>
                     <input
                         type="email"
                         name="email"
                         value={email}
+                        placeholder={initFormData.email}
                         onChange={(e) => setEmail(e.target.value)}
                         onFocus={(e) => {
-                            const statusCopy = JSON.parse(JSON.stringify(status));
-                            if(statusCopy && statusCopy.errors?.hasOwnProperty(e.target.name)){
-                                delete statusCopy.errors[e.target.name]
-                                setStatus(statusCopy)
+                            const statusCopy = JSON.parse(
+                                JSON.stringify(status)
+                            );
+                            if (
+                                statusCopy &&
+                                statusCopy.errors?.hasOwnProperty(e.target.name)
+                            ) {
+                                delete statusCopy.errors[e.target.name];
+                                setStatus(statusCopy);
                             }
                         }}
                     />
@@ -243,19 +295,24 @@ const Contact: NextPage = () => {
                 </div>
                 <div>
                     <label htmlFor="message">message</label>
-                    <input
-                        type="text"
+                    <textarea
                         name="message"
                         value={message}
+                        placeholder={initFormData.message}
                         onChange={(e) => setMessage(e.target.value)}
                         onFocus={(e) => {
-                            const statusCopy = JSON.parse(JSON.stringify(status));
-                            if(statusCopy && statusCopy.errors?.hasOwnProperty(e.target.name)){
-                                delete statusCopy.errors[e.target.name]
-                                setStatus(statusCopy)
+                            const statusCopy = JSON.parse(
+                                JSON.stringify(status)
+                            );
+                            if (
+                                statusCopy &&
+                                statusCopy.errors?.hasOwnProperty(e.target.name)
+                            ) {
+                                delete statusCopy.errors[e.target.name];
+                                setStatus(statusCopy);
                             }
                         }}
-                    />
+                    ></textarea>
                     {status?.errors?.message ? (
                         <ul>
                             {status.errors.message.map((error: string) => {
@@ -266,7 +323,7 @@ const Contact: NextPage = () => {
                 </div>
                 <button type="submit">Send</button>
             </form>
-        );
+        ) : null;
     } else if (status.state === "loading") {
         form = <p>Loading</p>;
     } else if (status.state === "success") {
