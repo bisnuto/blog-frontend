@@ -86,6 +86,7 @@ const Contact: NextPage = () => {
             }
         }
         getInitData();
+        //dependency array!!!
     }, []);
 
     // handle sumbit function
@@ -156,6 +157,7 @@ const Contact: NextPage = () => {
             // remove item from array
             fruitCopy = fruitCopy.filter((fruitObj) => fruitObj.id !== fruitId);
         }
+        console.log(fruitCopy);
         setFruits(fruitCopy);
     }
 
