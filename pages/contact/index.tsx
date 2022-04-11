@@ -145,7 +145,7 @@ const Contact: NextPage = () => {
     }
 
     function handleFruitChange(fruitId: number, fruitName: string) {
-        let fruitCopy = JSON.parse(JSON.stringify(fruits));
+        let fruitCopy: TFruit[] = JSON.parse(JSON.stringify(fruits));
         if (
             fruitCopy.filter((fruitObj) => fruitObj.id === fruitId).length === 0
         ) {
@@ -156,6 +156,7 @@ const Contact: NextPage = () => {
             // remove item from array
             fruitCopy = fruitCopy.filter((fruitObj) => fruitObj.id !== fruitId);
         }
+        //set new state for fruits
         setFruits(fruitCopy);
     }
 
