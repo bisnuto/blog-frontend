@@ -7,6 +7,36 @@ import { Button } from "@/components/elements/Button";
 import styles from "@/styles/pages/Home.module.scss";
 import { Animal } from "@/components/modules/Animal";
 
+type THome = {
+  id: number;
+  meta: {
+      type: string;
+      detail_url: string;
+      html_url: string;
+      slug: string;
+      first_published_at: string;
+  },
+  title: string;
+  custom_title: string;
+  intro: string;
+  top_image: {
+        id: 4,
+        meta: {
+            type: string;
+            detail_url: string;
+            download_url: string
+        },
+        title: string;
+    }
+  
+}
+
+// type THomeData = {
+//   items: THome[];
+// }
+type THData = THome | null;
+
+
 type TPost = {
   id: number;
   meta: {
@@ -27,25 +57,48 @@ type TPostData = {
 type TData = TPostData | null;
 
 const Home: NextPage = () => {
-
+  const [dataHome,setHomeData] = React.useState<THData>(null)
   const [data,setData] = React.useState<TData>(null)
-console.log(data);
-const apiUrl = "http://127.0.0.1:8000/api/v2/cms/pages/?type=blog.BlogPage";
+
+  
+console.log(dataHome);
+const apiHomeUrl = "http://127.0.0.1:8000/api/v2/cms/pages/3/";
+const apiBlogUrl = "http://127.0.0.1:8000/api/v2/cms/pages/?type=blog.BlogPage";
+
 React.useEffect(() => {
+    //For home page
+    async function fetchHomeJSON() {
+      try {
+          const responseHome = await fetch(apiHomeUrl);
+          const homeposts : THome = await responseHome.json();
+          
+          setHomeData(homeposts);
+      } catch (error) {
+          //console.error(error);
+      }
+
+    }
+    fetchHomeJSON();
+    //For blog pages
     async function fetchPostsJSON() {
         try {
-            const response = await fetch(apiUrl);
+            const response = await fetch(apiBlogUrl);
             const posts : TPostData = await response.json();
             
             setData(posts);
         } catch (error) {
             console.error(error);
-            console.log("here");
         }
 
       }
       fetchPostsJSON();
 },[])
+
+
+    const imgSrc = dataHome
+    ? `http://127.0.0.1:8000${dataHome.top_image.meta.download_url}`
+    : "";
+    console.log(imgSrc);
 
     return (
         <>
@@ -59,16 +112,22 @@ React.useEffect(() => {
             </Head>
 
             <section className={styles.Main}>
-                <h1 className={styles.Title}>
-                    Welcome to Fernandos Blog Project
-                </h1>
+                <div>
+                  <h1 className={styles.Title}>
+                      {dataHome?.title}
+                  </h1>
+                  <h2>{dataHome?.custom_title}</h2>
+                  <p>{dataHome?.intro}</p>
+                </div>
+  
                 <div className={styles.Banner}>
+                  
                   <Image
-                  src="/images/banner.jpg"
+                  src={imgSrc}
                   className={styles.BannerImage}
                   layout="fill"
                   objectFit="cover"
-                  alt="Autumn Sale Banner"
+                  alt={dataHome?.top_image.title}
                   objectPosition="center"
                   />
                 </div>
