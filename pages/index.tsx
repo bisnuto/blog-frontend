@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/elements/Button";
 import styles from "@/styles/pages/Home.module.scss";
 import { Animal } from "@/components/modules/Animal";
+import { Covid } from "@/components/modules/Covid";
 
 type THome = {
   id: number;
@@ -123,7 +124,8 @@ React.useEffect(() => {
                 <div className={styles.Banner}>
                   
                   <Image
-                  src="http://127.0.0.1:8000/media/original_images/the-ghost2.jpg"
+                  src={"http://127.0.0.1:8000/media/original_images/the-ghost2.jpg"}
+                  // imgSrc
                   className={styles.BannerImage}
                   layout="fill"
                   objectFit="cover"
@@ -155,6 +157,9 @@ React.useEffect(() => {
                    })}
                    </ul>
                 </section>
+                <section className={styles.Covid}>
+                  <Covid/>
+                </section> 
 
 
             </section>
