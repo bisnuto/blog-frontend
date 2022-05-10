@@ -123,7 +123,7 @@ React.useEffect(() => {
                 <div className={styles.Banner}>
                   
                   <Image
-                  src={imgSrc}
+                  src="http://127.0.0.1:8000/media/original_images/the-ghost2.jpg"
                   className={styles.BannerImage}
                   layout="fill"
                   objectFit="cover"
